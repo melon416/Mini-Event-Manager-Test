@@ -1,10 +1,13 @@
 # Mini Event Manager POC
 
-Created by: Architects Team @ lexart.tech ~ 2026
+**Author:** James  
+**Date:** 2026
 
-A full-stack event management application with a NestJS backend RESTful API and a Next.js frontend desktop application.
+This is a full-stack event management application developed as a proof of concept. The backend is a RESTful API built with NestJS, and the frontend is a desktop application built with Next.js.
 
 ## Project Structure
+
+The repository contains two main folders:
 
 ```
 Mini-Event-Manager-Test-/
@@ -13,366 +16,389 @@ Mini-Event-Manager-Test-/
 └── README.md         # This file
 ```
 
-## Quick Start
+---
 
-### Prerequisites
+## Prerequisites
 
-- Node.js (v20 or higher)
-- PostgreSQL (v15 or higher)
-- npm or yarn
-- Docker (optional, for containerized setup)
+Before starting, ensure you have the following installed on your system:
 
-### Backend Setup
+- **Node.js** (version 20 or higher)
+- **PostgreSQL** (version 15 or higher)
+- **npm** (comes with Node.js)
 
-1. Navigate to the backend directory:
-   ```bash
-   cd backend
-   ```
+You can verify your installations by running:
+```bash
+node --version
+npm --version
+psql --version
+```
 
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
+---
 
-3. Create a `.env` file with the following content:
-   ```env
-   DATABASE_URL="postgresql://user:password@localhost:5432/event_manager?schema=public"
-   JWT_SECRET="your-secret-key-change-in-production"
-   JWT_EXPIRES_IN="24h"
-   PORT=5000
-   CORS_ORIGIN="http://localhost:3000"
-   ```
+## How to Configure and Run the Backend
 
-4. Set up the database:
-   ```bash
-   npx prisma generate
-   npx prisma migrate dev --name init
-   ```
+Follow these steps **exactly** to set up and run the backend:
 
-5. Start the backend server:
-   ```bash
-   npm run start:dev
-   ```
+### Step 1: Navigate to Backend Directory
 
-   The API will be available at `http://localhost:5000`
-
-### Frontend Setup
-
-1. Navigate to the frontend directory:
-   ```bash
-   cd frontend
-   ```
-
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-3. Create a `.env.local` file:
-   ```env
-   NEXT_PUBLIC_API_URL=http://localhost:5000
-   ```
-
-4. Start the frontend application:
-   ```bash
-   npm run dev
-   ```
-
-   The application will be available at `http://localhost:3000`
-
-## Docker Setup (Alternative)
-
-### Backend with Docker Compose
-
-From the `backend` directory:
+Open a terminal and navigate to the backend folder:
 
 ```bash
-docker-compose up -d
+cd backend
 ```
 
-This will:
-- Start a PostgreSQL container
-- Build and start the backend API container
-- Automatically run database migrations
+### Step 2: Install Dependencies
 
-The API will be available at `http://localhost:5000`
+Install all required npm packages:
 
-## Application Features
-
-### Backend API
-
-- **Events Management**: CRUD operations for events
-  - `POST /events` - Create event
-  - `GET /events` - List all events
-  - `GET /events/:id` - Get event by ID
-  - `PUT /events/:id` - Update event
-  - `DELETE /events/:id` - Delete event
-
-- **Authentication**:
-  - `POST /auth/login` - User login
-  - `POST /api/register` - User registration
-
-- **Features**:
-  - PostgreSQL database with Prisma ORM
-  - JWT authentication
-  - Input validation
-  - Error handling
-  - CORS configuration
-  - Docker support
-
-### Frontend Application
-
-- **Screens**:
-  - Login screen
-  - Registration screen
-  - Event list screen
-  - Event detail screen
-  - Add/Edit event screen
-
-- **Features**:
-  - State management with React hooks
-  - Loading states
-  - Error handling
-  - Form validation
-  - JWT token management
-  - Responsive UI
-
-## API Documentation
-
-### Create Event
-
-**POST** `/events`
-
-Request:
-```json
-{
-  "name": "Tech Talk",
-  "date": "2026-01-15T14:30:00",
-  "description": "A talk about modern web development",
-  "place": "Conference Room A"
-}
+```bash
+npm install
 ```
 
-Response (201):
-```json
-{
-  "id": 1,
-  "name": "Tech Talk",
-  "date": "2026-01-15T14:30:00",
-  "description": "A talk about modern web development",
-  "place": "Conference Room A",
-  "createdAt": "2026-01-10T10:00:00.000Z",
-  "updatedAt": "2026-01-10T10:00:00.000Z"
-}
+Wait for the installation to complete. This may take a few minutes.
+
+### Step 3: Create Environment File
+
+Create a file named `.env` in the `backend` directory with the following content:
+
+```env
+DATABASE_URL="postgresql://postgres:YOUR_PASSWORD@localhost:5432/event_manager?schema=public"
+JWT_SECRET="your-secret-key-change-in-production"
+JWT_EXPIRES_IN="24h"
+PORT=5000
+CORS_ORIGIN="http://localhost:3000"
 ```
 
-### Get All Events
+**Important:** 
+- Replace `YOUR_PASSWORD` with your actual PostgreSQL password
+- Replace `postgres` with your PostgreSQL username if different
+- The database name `event_manager` will be created automatically in the next step
 
-**GET** `/events`
+### Step 4: Create PostgreSQL Database
 
-Response (200):
-```json
-[
-  {
-    "id": 1,
-    "name": "Tech Talk",
-    "date": "2026-01-15T14:30:00",
-    "description": "A talk about modern web development",
-    "place": "Conference Room A",
-    "createdAt": "2026-01-10T10:00:00.000Z",
-    "updatedAt": "2026-01-10T10:00:00.000Z"
-  }
-]
+Make sure PostgreSQL is running on your system. Then create the database:
+
+**Option A: Using psql command line:**
+```bash
+psql -U postgres
 ```
 
-### Get Event by ID
-
-**GET** `/events/:id`
-
-Response (200):
-```json
-{
-  "id": 1,
-  "name": "Tech Talk",
-  "date": "2026-01-15T14:30:00",
-  "description": "A talk about modern web development",
-  "place": "Conference Room A",
-  "createdAt": "2026-01-10T10:00:00.000Z",
-  "updatedAt": "2026-01-10T10:00:00.000Z"
-}
+Then in the PostgreSQL prompt, run:
+```sql
+CREATE DATABASE event_manager;
+\q
 ```
 
-### Update Event
+**Option B: Using pgAdmin:**
+1. Open pgAdmin
+2. Connect to your PostgreSQL server
+3. Right-click on "Databases" → "Create" → "Database"
+4. Name: `event_manager`
+5. Click "Save"
 
-**PUT** `/events/:id`
+### Step 5: Generate Prisma Client
 
-Request:
-```json
-{
-  "name": "Updated Tech Talk",
-  "date": "2026-01-16T15:00:00",
-  "description": "Updated description",
-  "place": "Conference Room B"
-}
+Generate the Prisma client:
+
+```bash
+npx prisma generate
 ```
 
-### Delete Event
+### Step 6: Run Database Migrations
 
-**DELETE** `/events/:id`
+Apply the database schema:
 
-Response (200):
-```json
-{
-  "message": "Event deleted successfully"
-}
+```bash
+npx prisma migrate dev --name init
 ```
 
-### User Registration
+This will create all necessary tables in your database.
 
-**POST** `/api/register`
+### Step 7: Start the Backend Server
 
-Request:
-```json
-{
-  "name": "John Doe",
-  "email": "john@example.com",
-  "password": "password123"
-}
+Start the development server:
+
+```bash
+npm run start:dev
 ```
 
-Response (201):
-```json
-{
-  "message": "User registered successfully"
-}
+**Expected Output:**
+You should see:
+```
+Application is running on: http://localhost:5000
 ```
 
-### User Login
+The backend API is now running and ready to accept requests.
 
-**POST** `/auth/login`
+**To verify it's working:** Open `http://localhost:5000/events` in your browser. You should see an empty array `[]`.
 
-Request:
-```json
-{
-  "email": "john@example.com",
-  "password": "password123"
-}
+---
+
+## How to Configure and Run the Frontend Application
+
+Follow these steps **exactly** to set up and run the frontend:
+
+### Step 1: Navigate to Frontend Directory
+
+Open a **new terminal window** (keep the backend running) and navigate to the frontend folder:
+
+```bash
+cd frontend
 ```
 
-Response (200):
-```json
-{
-  "message": "Login successful",
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-}
+### Step 2: Install Dependencies
+
+Install all required npm packages:
+
+```bash
+npm install
 ```
 
-## Validation Rules
+Wait for the installation to complete.
 
-- **Event name**: Required, must be a string
-- **Event date**: Required, must be in format `YYYY-MM-DDTHH:MM:SS` (e.g., `2026-01-15T14:30:00`)
-- **Event description**: Optional string
-- **Event place**: Optional string
-- **User email**: Required, must be a valid email format
-- **User password**: Required, minimum 6 characters
+### Step 3: Create Environment File
 
-## Error Handling
+Create a file named `.env.local` in the `frontend` directory with the following content:
 
-The API returns appropriate HTTP status codes:
-- `200 OK` - Successful request
-- `201 Created` - Resource created successfully
-- `400 Bad Request` - Invalid request data
-- `401 Unauthorized` - Authentication failed
-- `404 Not Found` - Resource not found
-- `500 Internal Server Error` - Server error
+```env
+NEXT_PUBLIC_API_URL=http://localhost:5000
+```
+
+**Important:** 
+- Make sure the backend is running before starting the frontend
+- The URL `http://localhost:5000` must match where your backend is running
+
+### Step 4: Start the Frontend Application
+
+Start the development server:
+
+```bash
+npm run dev
+```
+
+**Expected Output:**
+You should see:
+```
+▲ Next.js 14.1.0
+- Local:        http://localhost:3000
+✓ Ready in X.Xs
+```
+
+The frontend application is now running.
+
+### Step 5: Access the Application
+
+Open your web browser and navigate to:
+
+```
+http://localhost:3000
+```
+
+You should see the login page.
+
+---
+
+## Special Considerations
+
+### Port Configuration
+
+- **Backend API runs on port 5000** by default
+- **Frontend runs on port 3000** by default
+
+If port 5000 is already in use on your system:
+
+1. Edit the `backend/.env` file
+2. Change `PORT=5000` to an available port (e.g., `PORT=5001`)
+3. Update `frontend/.env.local` to match: `NEXT_PUBLIC_API_URL=http://localhost:5001`
+4. Restart both servers
+
+### Database Connection
+
+- The backend requires PostgreSQL to be running
+- Default PostgreSQL port is 5432
+- The database name `event_manager` must exist before running migrations
+- If your PostgreSQL uses different credentials, update the `DATABASE_URL` in `backend/.env`
+
+### CORS Configuration
+
+- CORS is configured to allow requests from `http://localhost:3000`
+- If you change the frontend port, update `CORS_ORIGIN` in `backend/.env`
+
+### Running Order
+
+**Important:** Always start the backend before the frontend:
+
+1. Start backend first: `cd backend && npm run start:dev`
+2. Wait for "Application is running on: http://localhost:5000"
+3. Then start frontend: `cd frontend && npm run dev`
+
+---
 
 ## Testing the Application
 
-1. **Start the backend** (from `backend` directory):
-   ```bash
-   npm run start:dev
-   ```
+Once both servers are running:
 
-2. **Start the frontend** (from `frontend` directory):
-   ```bash
-   npm run dev
-   ```
+1. **Register a new user:**
+   - Go to `http://localhost:3000/register`
+   - Fill in: Name, Email, Password (minimum 6 characters)
+   - Click "Register"
 
-3. **Access the application**:
-   - Open `http://localhost:3000` in your browser
-   - Register a new user
-   - Login with your credentials
-   - Create, view, edit, and delete events
+2. **Login:**
+   - Go to `http://localhost:3000/login`
+   - Enter your email and password
+   - Click "Login"
+   - You will be redirected to the events list
 
-## Technology Stack
+3. **Create an event:**
+   - Click the floating "+" button
+   - Fill in event details:
+     - Name (required)
+     - Date (required, use the date picker)
+     - Description (optional)
+     - Place (optional)
+   - Click "Create Event"
 
-### Backend
-- **Framework**: NestJS
-- **Language**: TypeScript
-- **Database**: PostgreSQL
-- **ORM**: Prisma
-- **Authentication**: JWT (Passport)
-- **Validation**: class-validator, class-transformer
+4. **View events:**
+   - The events list shows all events
+   - Click on any event to view details
 
-### Frontend
-- **Framework**: Next.js 14 (App Router)
-- **Language**: TypeScript
-- **HTTP Client**: Axios
-- **State Management**: React Hooks
-- **Styling**: CSS
+5. **Edit an event:**
+   - Click on an event to view details
+   - Click "Edit" button
+   - Modify the fields
+   - Click "Update Event"
 
-## Project Structure Details
+6. **Delete an event:**
+   - Click on an event to view details
+   - Click "Delete" button
+   - Confirm deletion
 
-### Backend
-```
-backend/
-├── src/
-│   ├── auth/              # Authentication module
-│   ├── events/            # Events module
-│   ├── prisma/            # Prisma service
-│   ├── app.module.ts      # Root module
-│   └── main.ts            # Application entry point
-├── prisma/
-│   └── schema.prisma      # Database schema
-├── Dockerfile
-├── docker-compose.yml
-└── package.json
-```
+---
 
-### Frontend
-```
-frontend/
-├── src/
-│   ├── app/
-│   │   ├── events/        # Event pages
-│   │   ├── login/         # Login page
-│   │   ├── register/      # Registration page
-│   │   └── layout.tsx     # Root layout
-│   └── lib/
-│       └── api.ts         # API client
-└── package.json
-```
+## API Endpoints
+
+The backend provides the following RESTful endpoints:
+
+### Events
+- `POST /events` - Create a new event
+- `GET /events` - Get all events
+- `GET /events/:id` - Get a specific event by ID
+- `PUT /events/:id` - Update an event
+- `DELETE /events/:id` - Delete an event
+
+### Authentication
+- `POST /api/register` - Register a new user
+- `POST /auth/login` - Login and receive JWT token
+
+All endpoints return JSON responses with appropriate HTTP status codes.
+
+---
 
 ## Troubleshooting
 
 ### Backend Issues
 
-- **Database connection errors**: Verify PostgreSQL is running and DATABASE_URL is correct
-- **Port already in use**: Change PORT in `.env` file
-- **Migration errors**: Run `npx prisma migrate reset` (WARNING: deletes all data)
+**Problem:** "Environment variable not found: DATABASE_URL"
+- **Solution:** Make sure you created the `.env` file in the `backend` directory with the exact content shown above
+
+**Problem:** "Error: connect ECONNREFUSED"
+- **Solution:** Verify PostgreSQL is running and the DATABASE_URL in `.env` is correct
+
+**Problem:** "Port 5000 already in use"
+- **Solution:** Change the PORT in `backend/.env` to an available port and update `frontend/.env.local` accordingly
+
+**Problem:** Migration errors
+- **Solution:** Make sure the `event_manager` database exists in PostgreSQL before running migrations
 
 ### Frontend Issues
 
-- **API connection errors**: Verify backend is running and NEXT_PUBLIC_API_URL is correct
-- **CORS errors**: Check CORS_ORIGIN in backend `.env` matches frontend URL
-- **Authentication issues**: Clear browser localStorage
+**Problem:** "Module not found" errors
+- **Solution:** Run `npm install` again in the `frontend` directory
 
-## Additional Resources
+**Problem:** "Failed to fetch" or API connection errors
+- **Solution:** 
+  1. Verify the backend is running on port 5000
+  2. Check that `NEXT_PUBLIC_API_URL` in `frontend/.env.local` matches the backend URL
+  3. Verify CORS_ORIGIN in `backend/.env` matches the frontend URL
 
-- [Backend README](./backend/README.md) - Detailed backend documentation
-- [Frontend README](./frontend/README.md) - Detailed frontend documentation
+**Problem:** Blank page or errors
+- **Solution:** Clear browser cache and localStorage, then refresh
 
-## License
+---
 
-MIT
+## Technology Stack
 
+### Backend
+- **Framework:** NestJS
+- **Language:** TypeScript
+- **Database:** PostgreSQL
+- **ORM:** Prisma
+- **Authentication:** JWT (Passport.js)
+- **Validation:** class-validator
+
+### Frontend
+- **Framework:** Next.js 14 (App Router)
+- **Language:** TypeScript
+- **HTTP Client:** Axios
+- **State Management:** React Hooks
+- **Styling:** CSS
+
+---
+
+## Project Structure
+
+### Backend Structure
+```
+backend/
+├── src/
+│   ├── auth/              # Authentication module
+│   ├── events/            # Events CRUD module
+│   ├── prisma/            # Prisma service
+│   ├── app.module.ts      # Root module
+│   └── main.ts            # Application entry point
+├── prisma/
+│   ├── schema.prisma      # Database schema
+│   └── migrations/        # Database migrations
+├── Dockerfile             # Docker configuration
+├── docker-compose.yml     # Docker Compose configuration
+└── package.json           # Dependencies
+```
+
+### Frontend Structure
+```
+frontend/
+├── src/
+│   ├── app/
+│   │   ├── events/        # Event pages (list, detail, edit, new)
+│   │   ├── login/         # Login page
+│   │   ├── register/      # Registration page
+│   │   ├── layout.tsx     # Root layout
+│   │   └── page.tsx       # Home page (redirects)
+│   └── lib/
+│       └── api.ts         # API client configuration
+└── package.json           # Dependencies
+```
+
+---
+
+## Additional Notes
+
+- The application uses JWT tokens for authentication, stored in browser localStorage
+- All dates must be in format: `YYYY-MM-DDTHH:MM:SS` (e.g., `2026-01-15T14:30:00`)
+- Event name and date are required fields; description and place are optional
+- User passwords must be at least 6 characters long
+- The application includes proper error handling and validation
+
+---
+
+## Contact
+
+If you encounter any issues during setup, please verify:
+1. All prerequisites are installed
+2. PostgreSQL is running
+3. All environment files are created correctly
+4. Both servers are started in the correct order
+
+---
+
+**End of README**
